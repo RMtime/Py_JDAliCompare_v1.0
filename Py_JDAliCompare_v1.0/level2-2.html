@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>搜索记录可视化页</title>
+		<script src="拖拽登录.js" type="text/javascript"></script>
+	<script>
+		//搜索记录数据，同时显示在div中 
+		function $(id){return document.getElementById(id);}
+		function saveInfo(){
+			var word1=getKeyword();
+			var address1=searchOnJD();
+			if (word1!="" && address1!="")  //不为空处理
+			{
+				localStorage.setItem(word1,address1);
+				loadAllInfo();
+				alert("添加成功"); 
+      $("word").value="";//添加成功后置空
+      $("word").focus();//获得焦点
+			$("address").value="";	//添加成功后置空
+			}else{
+			}			 
+		}
+		//以搜索词查找网址信息  
+		function findForWord(){  
+			var searchword = $("word").value;  
+			var searchadd = localStorage.getItem(searchword);  
+			$("address").value=searchadd; 
+		}
+		//从localStorage中取出所有信息，并展现到界面上
+		function loadAllInfo(){
+			// localStorage.clear();
+			var result = ""; 
+			if(localStorage.length>0){ 
+				result += "搜索词&nbsp;&nbsp;&nbsp;&nbsp;地址\n";  
+				for(var i=0;i<localStorage.length;i++){  
+					var word= localStorage.key(i);  
+					var address = localStorage.getItem(word);  
+					result += word+"   ---   "+address+"\n";  
+				}               
+				$("set").innerHTML = result;  
+			}else{  
+				$("set").innerHTML = "空……";  
+			}  
+		}
+		//删除某一条信息
+		function deleteWord(){
+			localStorage.removeItem($("word").value); //按关键词删除信息
+			$("address").value=""; //填充
+			$("word").value=""; 
+			$("word").focus(); 
+			loadAllInfo();
+		}	
+	</script>
+	</head>
+	<body onload="drawWatermark();loadAllInfo();">		 
+		<article style="width:350px;height:450px;text-align:center;border:12px groove #0099cc;margin:0 auto;padding:20px;">
+		<header>
+			<h3 style="background:#ededed;padding:10px auto;">搜索记录</h3>
+		</header>
+			<form method="post" action="">
+				<fieldset style="width:300px;text-align:center;">
+			<legend>网页搜索记录</legend><label for="name">搜索词：</label>  
+			<input type="text" id="word" name="word" required/><br/>    
+			<br><input type="button" onclick="saveInfo()" value="添加"/>			
+			<input type="button" onclick="findForWord()" value="查询"/>
+			<input type="button" onclick="deleteWord()" value="删除"/> 			
+			<input type="reset">			
+			</form>
+			<div id="displayallinfo" name="displayallinfo">
+			   <textarea name="" rows="8" cols="30" id="set"></textarea>
+			</div>
+		</fieldset>		
+		</article>
+	</body> 
+</html>
